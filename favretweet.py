@@ -1,7 +1,7 @@
 import tweepy
 import logging
 from config import create_api
-import json
+from time import sleep
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -12,7 +12,7 @@ class FavRetweetListener(tweepy.StreamListener):
         self.me = api.me()
 
     def on_status(self, tweet):
-        logger.info(f"Processing tweet id {tweet.id}")
+        logger.info(f"Processing tweet id {tweet.id} {tweet.text}")
         if tweet.in_reply_to_status_id is not None or \
             tweet.user.id == self.me.id:
             # This tweet is a reply or I'm its author so, ignore it
@@ -21,12 +21,14 @@ class FavRetweetListener(tweepy.StreamListener):
             # Mark it as Liked, since we have not done it yet
             try:
                 tweet.favorite()
+                sleep(10)
             except Exception as e:
                 logger.error("Error on fav", exc_info=True)
         if not tweet.retweeted:
             # Retweet, since we have not retweeted it yet
             try:
                 tweet.retweet()
+                sleep(10)
             except Exception as e:
                 logger.error("Error on fav and retweet", exc_info=True)
 
@@ -40,4 +42,4 @@ def main(keywords):
     stream.filter(track=keywords, languages=["en"])
 
 if __name__ == "__main__":
-    main(["beerbiceps", "lifemathmoney"])
+    main(["chanakya", "raftaar"])
