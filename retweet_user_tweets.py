@@ -38,13 +38,18 @@ class FavRetweetListener(tweepy.StreamListener):
     def on_error(self, status):
         logger.error(status)
 
-def main(screen_name):
-    api = create_api()
-    id_str = get_user_id(screen_name, api=api)
+def get_screen_name(api):
+	inp = ""
+	while not len(inp) > 3:
+		inp = input("Enter screen_name:")
+	if (api.get_user(inp)):
+		return get_user_id(inp, api=api)
+	else:
+		logger.error("Invalid")
+
+def fav_user(api):
+    id_str = get_screen_name(api)
     tweets_listener = FavRetweetListener(api)
     stream = tweepy.Stream(api.auth, tweets_listener)
     #bulk follow and track possible
     stream.filter(follow=id_str, languages=["en"])
-
-if __name__ == "__main__":
-    main("48_quotes")

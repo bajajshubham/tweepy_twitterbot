@@ -7,12 +7,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 def unfollow_following(api):
-    logger.info("Retrieving and un_following following")
-    for follower in tweepy.Cursor(api.followers).items():
-        if follower.following:
+
+    logger.info(f"Retrieving and un_following following::{len(api.friends_ids())}")
+    for follower in tweepy.Cursor(api.friends).items():
             logger.info(f"UN_Following {follower.name}")
             follower.unfollow()
-            sleep(15)
+            sleep(5)
+    logger.info("Done...")
 
 def main():
     api = create_api()
@@ -20,6 +21,3 @@ def main():
         unfollow_following(api)
         logger.info("Done...")
         #time.sleep(60)
-
-if __name__ == "__main__":
-    main()

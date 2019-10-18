@@ -7,12 +7,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 def follow_followers(api):
-    logger.info("Retrieving and following followers")
+    logger.info(f"Retrieving and following followers ::{len(api.followers_ids())}")
     for follower in tweepy.Cursor(api.followers).items():
         if not follower.following:
             logger.info(f"Following {follower.name}")
             follower.follow()
-            sleep(15)
+            sleep(5)
+    logger.info("Done...")
+
 
 def main():
     api = create_api()
@@ -20,6 +22,3 @@ def main():
         follow_followers(api)
         logger.info("Done...")
         #time.sleep(60)
-
-if __name__ == "__main__":
-    main()
